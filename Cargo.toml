@@ -10,8 +10,20 @@ panic = "abort"
 [profile.release]
 panic = "abort"
 
+[package.metadata.bootimage]
+test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04", "-serial", "stdio", "-display", "none"]
+test-success-exit-code = 33 # (0x10 << 1) | 1
+test-timeout = 30   # seconds
+
 [dependencies]
+# build a bootable image
 bootloader = "0.9.4"
+# wrap vga memory address as volatile so that it won't be optimized
 volatile = "0.2.6"
+# for a static vga writer
 lazy_static = { version= "1.4.0", "features" = ["spin_no_std"] }
 spin = "0.5.2"
+# for qemu exiting in testing
+x86_64 = "0.11.1"
+# for qemu stdout redirect
+uart_16550 = "0.2.7"
