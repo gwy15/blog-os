@@ -13,6 +13,7 @@ jobs:
       - name: Setup toolchains
         run: |
             rustup toolchain install nightly
+            rustup component add rust-src
             cargo install cargo-xbuild
             rustup component add llvm-tools-preview
             cargo install bootimage
