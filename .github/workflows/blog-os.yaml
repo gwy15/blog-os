@@ -17,8 +17,14 @@ jobs:
             cargo install cargo-xbuild
             rustup component add llvm-tools-preview
             cargo install bootimage
+      - name: Setup test environment
+        run: |
+            sudo apt install -y qemu-system
 
       - name: Build with cargo-xbuild
         run: |
             cargo xbuild
             cargo bootimage
+      - name: Run unit tests and integration test
+        run: |
+            cargo xtest
