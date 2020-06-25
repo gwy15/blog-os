@@ -17,7 +17,8 @@ test-timeout = 30   # seconds
 
 [dependencies]
 # build a bootable image
-bootloader = "0.9.4"
+# bootloader = "0.9.4"
+bootloader = { git = "https://github.com/Freax13/bootloader.git", branch = "fix-dupplicate-improper-ctype" }
 # wrap vga memory address as volatile so that it won't be optimized
 volatile = "0.2.6"
 # for a static vga writer
