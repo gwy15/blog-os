@@ -5,16 +5,14 @@
 #![test_runner(blog_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
+use blog_os::println;
 use core::panic::PanicInfo;
-
-mod serial;
-mod vga_buffer;
 
 // main entry, no name mangle
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     #[cfg(test)]
-    blog_os::qemu::exit(blog_os::qemu::ExitCode::Success);
+    test_main();
 
     println!("Hello, {}!", "world");
     loop {}
