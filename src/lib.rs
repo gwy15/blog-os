@@ -1,5 +1,6 @@
 #![no_std]
 #![cfg_attr(test, no_main)]
+// tests
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
@@ -32,9 +33,9 @@ where
     T: Fn(),
 {
     fn run(&self) {
-        serial_print!("{}...\t", core::any::type_name::<T>());
+        serial_print!("test {}...\t", core::any::type_name::<T>());
         self();
-        serial_println!("[ok]");
+        serial_println!("\x1B[32m[ok]\x1B[0m");
     }
 }
 
@@ -47,7 +48,7 @@ pub fn test_runner(tests: &[&dyn Testable]) {
 }
 
 pub fn test_panic_handler(info: &PanicInfo) -> ! {
-    serial_println!("[failed]\n");
+    serial_println!("\x1B[31m[failed]\x1B[0m");
     serial_println!("Error: {}\n", info);
     qemu::exit(qemu::ExitCode::Failed);
     loop {}
