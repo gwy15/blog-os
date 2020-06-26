@@ -126,10 +126,15 @@ lazy_static! {
     });
 }
 
+#[inline]
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use fmt::Write;
-    WRITER.lock().write_fmt(args).unwrap();
+    use x86_64::instructions::interrupts;
+
+    interrupts::without_interrupts(|| {
+        WRITER.lock().write_fmt(args).unwrap();
+    });
 }
 
 #[macro_export]
@@ -162,11 +167,17 @@ mod test {
 
     #[test_case]
     fn test_println_output() {
-        let s = "Some test string that fits on a single line";
-        println!("{}", s);
-        for (i, c) in s.chars().enumerate() {
-            let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
-            assert_eq!(char::from(screen_char.ascii_char), c);
-        }
+        use core::fmt::Write;
+        use x86_64::instructions::interrupts;
+        interrupts::without_interrupts(|| {
+            let s = "Some test string that fits on a single line";
+            let mut writer = WRITER.lock();
+            // use a new line to clear previous output
+            writeln!(writer, "\n{}", s).ok();
+            for (i, c) in s.chars().enumerate() {
+                let screen_char = writer.buffer.chars[BUFFER_HEIGHT - 2][i].read();
+                assert_eq!(char::from(screen_char.ascii_char), c);
+            }
+        });
     }
 }

@@ -1,7 +1,9 @@
 {
     "cSpell.words": [
         "Qemu",
+        "Scancode",
         "addr",
+        "keyevent",
         "repr",
         "virt",
         "virt addr"

@@ -19,12 +19,21 @@ pub mod vga_buffer;
 pub extern "C" fn _start() -> ! {
     init();
     test_main();
-    loop {}
+
+    halt_loop();
 }
 
 pub fn init() {
+    // initialize global descriptor table
     gdt::init();
-    interrupts::init_idt();
+    // initialize interrupts (idt and external interrupts)
+    interrupts::init();
+}
+
+pub fn halt_loop() -> ! {
+    loop {
+        x86_64::instructions::hlt();
+    }
 }
 
 #[cfg(test)]
@@ -60,7 +69,7 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     serial_println!("\x1B[31m[failed]\x1B[0m");
     serial_println!("Error: {}\n", info);
     qemu::exit(qemu::ExitCode::Failed);
-    loop {}
+    halt_loop();
 }
 
 pub mod qemu {

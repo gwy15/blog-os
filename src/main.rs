@@ -17,7 +17,7 @@ pub extern "C" fn _start() -> ! {
     test_main();
 
     println!("Hello, {}!", "world");
-    loop {}
+    blog_os::halt_loop();
 }
 
 /// Panic handler
@@ -25,7 +25,7 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    blog_os::halt_loop();
 }
 #[cfg(test)]
 #[panic_handler]
