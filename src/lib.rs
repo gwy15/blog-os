@@ -1,4 +1,5 @@
 #![no_std]
+#![feature(abi_x86_interrupt)]
 #![cfg_attr(test, no_main)]
 // tests
 #![feature(custom_test_frameworks)]
@@ -7,6 +8,7 @@
 
 use core::panic::PanicInfo;
 
+pub mod interrupts;
 pub mod serial;
 pub mod vga_buffer;
 
@@ -14,8 +16,13 @@ pub mod vga_buffer;
 #[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    init();
     test_main();
     loop {}
+}
+
+pub fn init() {
+    interrupts::init_idt();
 }
 
 #[cfg(test)]

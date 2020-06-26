@@ -11,6 +11,8 @@ use core::panic::PanicInfo;
 // main entry, no name mangle
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
+    blog_os::init();
+
     #[cfg(test)]
     test_main();
 
